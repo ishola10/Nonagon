@@ -12,9 +12,6 @@ const router = createRouter({
     {
       path: "/about",
       name: "about",
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import("../views/AboutView.vue"),
     },
     {
@@ -37,21 +34,11 @@ const router = createRouter({
       name: "profile",
       component: () => import("../auth/Profile.vue"),
     },
-    // {
-    //   path:"/calculator",
-    //   name:"calculator",
-    //   component: () => import("../components/Calculator.vue"),
-    // },
     {
       path: "/chatbot",
       name: "chatbot",
       component: () => import("../chatbot/Chatbot.vue"),
     },
-    // {
-    //   path: '/forgot-password',
-    //   name: 'forgot-password',
-    //   component: () => import('../auth/ForgotPassword.vue')
-    // },
     {
       path: "/electric-circuit",
       name: "electric-circuit",
@@ -82,6 +69,12 @@ const router = createRouter({
       name: "wave-patterns",
       component: () => import("../Sections/WavePatterns.vue"),
     },
+    {
+      path: "/topic/:title",
+      name: "topic-content",
+      component: () => import("../views/TopicContent.vue"),
+      props: true
+    }
   ],
 });
 
