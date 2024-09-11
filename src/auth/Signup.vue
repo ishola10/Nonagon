@@ -53,7 +53,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { auth, db } from "../firebase"; // Ensure you have these imports
+import { auth, db } from "../firebase";
 import {
   createUserWithEmailAndPassword,
   updateProfile,

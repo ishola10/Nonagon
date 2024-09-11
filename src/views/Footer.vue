@@ -9,7 +9,7 @@
                     <a href="#">Terms of Service</a>
                 </div>
                 <div class="footer-logo">
-                    <h1>ATOM ACADEMY .</h1>
+                    <h1>Nonagon .</h1>
                 </div>
                 <div>© copyright 2024</div>
             </div>
