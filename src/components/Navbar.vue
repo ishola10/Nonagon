@@ -4,7 +4,7 @@
       <router-link to="/"><h1>Nonagon.</h1></router-link>
     </div>
     <div class="links">
-      <router-link to="/" active-class="active">Home</router-link>
+      <!-- <router-link to="/" active-class="active">Home</router-link> -->
       <router-link to="/about" active-class="active">About</router-link>
       <div class="topics-container">
         <a class="dr" href="#" @click="toggleTopics">
@@ -76,7 +76,11 @@ import axios from "axios";
 const isAuthenticated = ref(false);
 const showTopics = ref(false);
 const searchQuery = ref("");
-const topics = ref([]);
+interface Topic {
+  title: string;
+}
+
+const topics = ref<Topic[]>([]);
 
 const toggleTopics = () => {
   showTopics.value = !showTopics.value;
@@ -128,7 +132,11 @@ onMounted(() => {
   padding: 1rem 4rem;
   background-color: #333;
   color: white;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 }
 .navbar h1 {
   font-size: 2rem;

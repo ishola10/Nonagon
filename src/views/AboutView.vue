@@ -1,12 +1,15 @@
 <template>
   <div class="about">
-    <div class="container">
-      <div class="about-banner">
+    <div class="about-banner">
+      <div class="banner-content">
         <h1>AtomAcademy</h1>
         <p>Learn everything about <strong>AtomAcademy</strong></p>
         <router-link to="/signup" class="btn">Sign Up</router-link>
       </div>
-      <div class="first-sec">
+    </div>
+
+    <div class="container">
+      <section class="first-sec">
         <h2>About Us</h2>
         <p>
           AtomAcademy is an online platform that provides interactive physics
@@ -14,9 +17,9 @@
           physics fun and engaging by offering a variety of resources, including
           simulations, practice problems, and real-world examples.
         </p>
-      </div>
+      </section>
 
-      <div class="team">
+      <section class="team">
         <h2>Our Team</h2>
         <div class="members">
           <div class="member">
@@ -35,18 +38,18 @@
             <p>Content Creator</p>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div class="features">
+      <section class="features">
         <h2>Features</h2>
         <ul>
           <li>Interactive simulations</li>
           <li>Practice problems</li>
           <li>Real-world examples</li>
         </ul>
-      </div>
+      </section>
 
-      <div class="topics">
+      <section class="topics">
         <h2>Topics</h2>
         <p>AtomAcademy covers a wide range of topics, including:</p>
         <ul>
@@ -58,16 +61,16 @@
           <li>Fluid Dynamics</li>
           <li>And much more!</li>
         </ul>
-      </div>
+      </section>
 
-      <div class="get-started">
+      <section class="get-started">
         <h2>Get Started</h2>
         <p>
           Ready to start exploring the world of physics? Sign up for a free
           account today and begin your journey!
         </p>
         <router-link to="/signup" class="btn">Sign Up</router-link>
-      </div>
+      </section>
     </div>
 
     <Footer />
@@ -80,56 +83,80 @@ import Footer from './Footer.vue';
 
 <style scoped>
 .about {
-  background-color: white;
+  font-family: 'Arial', sans-serif;
   color: var(--text-color);
 }
-.about-banner{
-  background-color: var(--primary-color);
+
+.about-banner {
+  background: var(--bg-color);
   color: white;
-  text-align: left;
-  padding: 15rem 0 2rem 3rem;
-  height: 100vh;
+  text-align: center;
+  padding: 12rem 1rem;
+  height: 90vh;
+}
+
+.banner-content {
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .about-banner h1 {
-  font-size: 4.5rem;
-  color: var(--background-color);
+  font-size: 3rem;
+  margin-bottom: 1rem;
 }
 
 .about-banner p {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
 }
 
 .about-banner .btn {
   display: inline-block;
-  padding: 1rem 2rem;
+  padding: 0.75rem 1.5rem;
   background-color: var(--accent-color);
   color: white;
   border-radius: 0.5rem;
+  font-size: 1.25rem;
   text-decoration: none;
   transition: background-color 0.3s ease;
 }
 
+.about-banner .btn:hover {
+  background-color: #1e40af;
+}
 
-h1, h2 {
+/* Container Styles */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* Section Styles */
+section {
+  margin-bottom: 2rem;
+}
+
+h2 {
   color: var(--primary-color);
+  margin-bottom: 1rem;
 }
 
 p {
   line-height: 1.6;
 }
 
-.team {
-  margin-top: 2rem;
-}
-
+/* Team Section */
 .members {
   display: flex;
-  gap: 2rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
 }
 
 .member {
   text-align: center;
+  width: 200px;
 }
 
 .member img {
@@ -137,28 +164,34 @@ p {
   width: 150px;
   height: 150px;
   object-fit: cover;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
-.features, .topics, .get-started {
-  margin-top: 2rem;
+.member h3 {
+  margin-bottom: 0.25rem;
 }
 
-.features ul, .topics ul {
-  list-style: none;
+ul {
+  list-style-type: none;
   padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
 }
 
-.features li, .topics li {
+li {
   background-color: var(--secondary-color);
   padding: 0.5rem 1rem;
   margin-bottom: 0.5rem;
   border-radius: 0.5rem;
 }
 
+/* Get Started */
+.get-started {
+  text-align: center;
+}
+
 .get-started .btn {
-  display: inline-block;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1.5rem;
   background-color: var(--primary-color);
   color: white;
   border-radius: 0.5rem;
@@ -168,5 +201,21 @@ p {
 
 .get-started .btn:hover {
   background-color: var(--accent-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .about-banner h1 {
+    font-size: 2.5rem;
+  }
+
+  .about-banner p {
+    font-size: 1rem;
+  }
+
+  .members {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 </style>

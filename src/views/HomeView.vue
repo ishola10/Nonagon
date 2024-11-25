@@ -135,7 +135,7 @@ const drawHeroAnimation = () => {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
-  let particles = [];
+  let particles: { x: number; y: number; vx: number; vy: number; size: number }[] = [];
   const numParticles = 100;
 
   const createParticles = () => {
@@ -202,8 +202,9 @@ onMounted(() => {
 <style scoped>
 .hero {
   position: relative;
+  margin-top: 5%;
   width: 100%;
-  height: 90vh;
+  height: 100vh;
   background: linear-gradient(
     135deg,
     var(--background-color),
