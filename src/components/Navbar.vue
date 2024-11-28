@@ -1,10 +1,9 @@
 <template>
-  <div class="navbar">
+  <div v-if="isNavbarVisible" class="navbar">
     <div>
       <router-link to="/"><h1>Nonagon.</h1></router-link>
     </div>
     <div class="links">
-      <!-- <router-link to="/" active-class="active">Home</router-link> -->
       <router-link to="/about" active-class="active">About</router-link>
       <div class="topics-container">
         <a class="dr" href="#" @click="toggleTopics">
@@ -33,29 +32,17 @@
             </router-link>
           </div>
           <div>
-            <router-link to="/electric-circuit" @click="closeTopics"
-              >Electric Circuits</router-link
-            >
-            <router-link to="/fluid-dynamics" @click="closeTopics"
-              >Fluid Dynamics</router-link
-            >
-            <router-link to="/harmonic-motion" @click="closeTopics"
-              >Harmonic Motion</router-link
-            >
-            <router-link to="/pendulum-swing" @click="closeTopics"
-              >Pendulum Swing</router-link
-            >
-            <router-link to="/thermo-dynamics" @click="closeTopics"
-              >Thermo Dynamics</router-link
-            >
-            <router-link to="/wave-patterns" @click="closeTopics"
-              >Wave Patterns</router-link
-            >
+            <router-link to="/electric-circuit" @click="closeTopics">Electric Circuits</router-link>
+            <router-link to="/fluid-dynamics" @click="closeTopics">Fluid Dynamics</router-link>
+            <router-link to="/harmonic-motion" @click="closeTopics">Harmonic Motion</router-link>
+            <router-link to="/pendulum-swing" @click="closeTopics">Pendulum Swing</router-link>
+            <router-link to="/thermo-dynamics" @click="closeTopics">Thermo Dynamics</router-link>
+            <router-link to="/wave-patterns" @click="closeTopics">Wave Patterns</router-link>
           </div>
         </div>
       </div>
       <router-link to="/contact" active-class="active">Contact</router-link>
-      <router-link to="/chatbot" active-class="active">Chatbot</router-link>
+      <a style="cursor: pointer;" @click="navigateToChatbot" active-class="active">Chatbot</a>
     </div>
     <div class="links">
       <router-link v-if="!isAuthenticated" to="/signup">SignUp</router-link>
@@ -67,19 +54,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import router from "@/router/index";
 import axios from "axios";
 
 const isAuthenticated = ref(false);
 const showTopics = ref(false);
 const searchQuery = ref("");
+const isNavbarVisible = ref(true);
+
+const router = useRouter();
+const route = useRoute();
+
 interface Topic {
   title: string;
 }
-
 const topics = ref<Topic[]>([]);
 
 const toggleTopics = () => {
@@ -117,12 +108,29 @@ const logout = async () => {
   }
 };
 
+const navigateToChatbot = () => {
+  if (isAuthenticated.value) {
+    router.push("/chatbot");
+  } else {
+    router.push("/login");
+  }
+};
+
+watch(
+  () => route.path,
+  (newPath) => {
+    const hiddenRoutes = ["/chatbot", "/login", "/signup"];
+    isNavbarVisible.value = !hiddenRoutes.includes(newPath);
+  }
+);
+
 onMounted(() => {
   onAuthStateChanged(auth, (user) => {
     isAuthenticated.value = !!user;
   });
 });
 </script>
+
 
 <style scoped>
 .navbar {

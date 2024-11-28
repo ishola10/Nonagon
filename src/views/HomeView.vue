@@ -5,8 +5,8 @@
         <div class="hero-content-text">
           <h2>Explore the Wonders of Physics</h2>
           <p>
-            Interactive simulations to help you understand and visualize complex
-            physical phenomena.
+            Helping Nigerian students understand physics concepts through
+            interactive simulations and hands-on experimentation.
           </p>
           <a href="/signup" class="cta-button">Get Started</a>
         </div>

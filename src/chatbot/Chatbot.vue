@@ -1,157 +1,246 @@
 <template>
-  <div class="chat-container">
-    <h1 class="mb-5">Hello, I'm Nonagon AI. Ask me anything</h1>
-
-    <div class="chat-history">
-      <div v-for="item in chatHistory" :key="item.id" class="chat-item">
-        <div class="user-message">
-          <strong>You:</strong> {{ item.question }}
+  <div class="chat-app">
+    <aside class="sidebar">
+      <button class="new-chat-btn" @click="createNewTab">+ New Chat</button>
+      <div class="chat-tabs">
+        <div
+          v-for="(tab, index) in chatTabs"
+          :key="index"
+          :class="{ active: activeTab === index }"
+          class="chat-tab"
+          @click="switchTab(index)"
+        >
+          Chat {{ index + 1 }}
         </div>
-        <div class="ai-message">
-          <strong>Nonagon AI:</strong> {{ item.answer }}
+      </div>
+    </aside>
+
+    <div class="chat-container">
+      <h1 class="mb-5">Hello, I'm Nonagon AI. Ask me anything</h1>
+
+      <div class="chat-history">
+        <div
+          v-for="item in chatTabs[activeTab]?.history || []"
+          :key="item.id"
+          class="chat-item"
+        >
+          <div class="user-message">
+            <strong>You:</strong> {{ item.question }}
+          </div>
+          <div class="ai-message">
+            <strong>Nonagon AI:</strong> {{ item.answer }}
+          </div>
         </div>
       </div>
-    </div>
 
-    <form class="chat-input-form" @submit.prevent="fetchAnswer">
-      <div class="input-group">
-        <textarea
-          name="question"
-          id="question"
-          rows="3"
-          v-model="question"
-          placeholder="Type your question..."
-        ></textarea>
-        <button type="submit" :disabled="!question.trim().length">
-          {{ isLoading ? 'Asking Nonagon AI...' : 'Ask' }}
-        </button>
-      </div>
-      <div class="chat-options">
-        <button type="button" @click="clearQuestion">Clear</button>
-        <select v-model="selectedLanguage">
-          <option value="en">English</option>
-          <option value="es">Spanish</option>
-          <option value="fr">French</option>
-        </select>
-        <button @click="toggleListening" :disabled="isListening">
-          {{ isListening ? 'Listening...' : 'Voice Input' }}
-        </button>
-      </div>
-    </form>
-
-    <!-- Auth Popup Modal -->
-    <div v-if="showAuthPopup" class="auth-popup">
-      <div class="auth-popup-content">
-        <h3>You need to sign in to ask a question</h3>
-        <router-link to="/login" class="auth-link">Login</router-link>
-        <router-link to="/signup" class="auth-link">Sign Up</router-link>
-        <button @click="showAuthPopup = false" class="close-popup">Close</button>
-      </div>
+      <form class="chat-input-form" @submit.prevent="fetchAnswer">
+        <div class="input-group">
+          <textarea
+            name="question"
+            id="question"
+            rows="3"
+            v-model="question"
+            placeholder="Type your question or use voice input..."
+          ></textarea>
+          <button type="submit" :disabled="!question.trim().length">
+            {{ isLoading ? "Asking Nonagon AI..." : "Ask" }}
+          </button>
+        </div>
+        <div class="chat-options">
+          <button type="button" @click="clearQuestion">Clear</button>
+          <select v-model="selectedLanguage">
+            <option value="en">English</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+          </select>
+          <button @click="toggleListening" :disabled="isListening">
+            {{ isListening ? "Listening..." : "Voice Input" }}
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useGetGenerativeModelGP } from './useGetGenerativeModelGP.js'
-import AIAnswer from './AIAnswer.vue'
-import { onAuthStateChanged } from 'firebase/auth'
-import { auth } from '../firebase' // Adjust the path to your Firebase config
+import { ref, watch, onMounted } from "vue";
+import { useGetGenerativeModelGP } from "./useGetGenerativeModelGP.js";
 
-const question = ref('')
-const answer = ref('')
-const isLoading = ref(false)
-const chatHistory = ref([])
-const selectedLanguage = ref('en')
-const isListening = ref(false)
-const showAuthPopup = ref(false)
-const user = ref(null)
+const question = ref("");
+const isLoading = ref(false);
+const selectedLanguage = ref("en");
+const isListening = ref(false);
 
-let recognition = null
+const chatTabs = ref([]);
+const activeTab = ref(0);
 
-// Check if the user is authenticated
+let recognition = null;
+
+const loadChatsFromStorage = () => {
+  const savedChats = localStorage.getItem("chatTabs");
+  if (savedChats) {
+    chatTabs.value = JSON.parse(savedChats);
+    activeTab.value = parseInt(localStorage.getItem("activeTab")) || 0;
+  } else {
+    chatTabs.value = [{ history: [] }];
+  }
+};
+
+const saveChatsToStorage = () => {
+  localStorage.setItem("chatTabs", JSON.stringify(chatTabs.value));
+  localStorage.setItem("activeTab", activeTab.value.toString());
+};
+
+watch(chatTabs, saveChatsToStorage, { deep: true });
+watch(activeTab, saveChatsToStorage);
+
 onMounted(() => {
-  onAuthStateChanged(auth, (currentUser) => {
-    user.value = currentUser
-  })
-})
+  loadChatsFromStorage();
+});
 
 const fetchAnswer = async () => {
-  // If the user is not authenticated, show the login/signup popup
-  if (!user.value) {
-    showAuthPopup.value = true
-    return
-  }
-
-  answer.value = ''
-  isLoading.value = true
+  isLoading.value = true;
 
   try {
-    answer.value = await useGetGenerativeModelGP(question.value, selectedLanguage.value)
-    chatHistory.value.push({ id: Date.now(), question: question.value, answer: answer.value })
+    const aiResponse = await useGetGenerativeModelGP(
+      question.value,
+      selectedLanguage.value
+    );
+    chatTabs.value[activeTab.value].history.push({
+      id: Date.now(),
+      question: question.value,
+      answer: aiResponse,
+    });
+    question.value = "";
   } catch (error) {
-    console.error('Error fetching answer:', error)
+    console.error("Error fetching answer:", error);
   } finally {
-    isLoading.value = false
-    question.value = ''
+    isLoading.value = false;
   }
-}
+};
+
+const createNewTab = () => {
+  chatTabs.value.push({ history: [] });
+  activeTab.value = chatTabs.value.length - 1;
+};
+
+const switchTab = (index) => {
+  activeTab.value = index;
+};
 
 const clearQuestion = () => {
-  question.value = ''
-  answer.value = ''
-}
+  question.value = "";
+};
 
 const toggleListening = () => {
   if (!isListening.value) {
-    startListening()
+    startListening();
   } else {
-    stopListening()
+    stopListening();
   }
-}
+};
 
 const startListening = () => {
-  recognition = new webkitSpeechRecognition()
-  recognition.continuous = false
-  recognition.lang = selectedLanguage.value
-  recognition.interimResults = false
+  recognition = new webkitSpeechRecognition();
+  recognition.continuous = false;
+  recognition.lang = selectedLanguage.value;
+  recognition.interimResults = false;
 
   recognition.onstart = () => {
-    isListening.value = true
-  }
+    isListening.value = true;
+  };
 
   recognition.onresult = (event) => {
-    const transcript = event.results[0][0].transcript
-    question.value = transcript
-    fetchAnswer()
-    isListening.value = false
-  }
+    const transcript = event.results[0][0].transcript;
+    question.value = transcript;
+    fetchAnswer();
+    isListening.value = false;
+  };
 
   recognition.onerror = (event) => {
-    console.error('Speech recognition error:', event.error)
-    isListening.value = false
-  }
+    console.error("Speech recognition error:", event.error);
+    isListening.value = false;
+  };
 
   recognition.onend = () => {
-    isListening.value = false
-  }
+    isListening.value = false;
+  };
 
-  recognition.start()
-}
+  recognition.start();
+};
 
 const stopListening = () => {
-  recognition.stop()
-  isListening.value = false
-}
+  if (recognition) {
+    recognition.stop();
+    isListening.value = false;
+  }
+};
 </script>
 
+
 <style scoped>
+.chat-app {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #2c3e50;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.new-chat-btn {
+  padding: 0.5rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  margin-top: 30%;
+  cursor: pointer;
+}
+
+.new-chat-btn:hover {
+  background-color: #0056b3;
+}
+
+.chat-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.chat-tab {
+  padding: 0.5rem;
+  background-color: #34495e;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.chat-tab:hover {
+  background-color: #3e536d;
+}
+
+.chat-tab.active {
+  background-color: #007bff;
+  font-weight: bold;
+}
+
 .chat-container {
-  max-width: 800px;
-  margin: 0 auto;
+  flex-grow: 1;
   padding: 2rem;
   background-color: #f5f5f5;
   border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .mb-5 {
@@ -159,7 +248,8 @@ const stopListening = () => {
 }
 
 .chat-history {
-  max-height: 300px;
+  flex-grow: 1;
+  max-height: calc(100vh - 300px);
   overflow-y: auto;
   margin-bottom: 1.5rem;
   background-color: #ffffff;
@@ -236,41 +326,5 @@ button[disabled] {
 select {
   padding: 0.5rem;
   border-radius: 10px;
-}
-
-/* Auth Popup Modal */
-.auth-popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.auth-popup-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 5px;
-  text-align: center;
-}
-
-.auth-link {
-  display: block;
-  margin-top: 10px;
-  text-decoration: none;
-  color: #007bff;
-}
-
-.close-popup {
-  margin-top: 15px;
-  padding: 5px 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
 }
 </style>

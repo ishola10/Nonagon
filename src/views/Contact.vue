@@ -1,18 +1,20 @@
 <template>
-    <div class="contact-page">
-      <!-- Banner Section -->
-      <div class="banner">
-        <div class="banner-content">
-          <h1>Contact Us</h1>
-          <p>We're here to help. Get in touch with us today!</p>
-        </div>
+  <div class="contact-page">
+    <div class="banner">
+      <div class="banner-content">
+        <h1>Contact Us</h1>
+        <p>We're here to help. Get in touch with us today!</p>
+        <h3>For any inquiries or support, please fill out the form below:</h3>
+        <div class="bouncing-arrow">⬇️</div>
       </div>
-  
-      <!-- Contact Form Section -->
-      <div class="contact-container">
-        <p>For any inquiries or support, please fill out the form below:</p>
-        <div class="contact-form">
-          <label for="name">Name:</label>
+    </div>
+
+    <div class="contact-container">
+      <p>For any inquiries or support, please fill out the form below:</p>
+      <div class="contact-form">
+        <label for="name"
+          >Name: <br />
+          <br />
           <input
             type="text"
             id="name"
@@ -20,8 +22,11 @@
             placeholder="Your Name"
             required
           />
-  
-          <label for="email">Email:</label>
+        </label>
+
+        <label for="email"
+          >Email: <br />
+          <br />
           <input
             type="email"
             id="email"
@@ -29,155 +34,171 @@
             placeholder="Your Email"
             required
           />
-  
-          <label for="message">Message:</label>
+        </label>
+
+        <label for="message"
+          >Message: <br />
+          <br />
           <textarea
             id="message"
             name="message"
             placeholder="Your Message"
             required
           ></textarea>
-  
-          <button>Submit</button>
-        </div>
+        </label>
+
+        <button>Submit</button>
       </div>
     </div>
-  </template>
-  
-  <script setup lang="ts">
-  // Script setup (if needed for additional functionality)
-  </script>
-  
-  <style scoped>
-  /* General Reset */
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+
+    <Footer />
+  </div>
+</template>
+
+<script setup lang="ts">
+import Footer from "./Footer.vue";
+</script>
+
+<style scoped>
+.contact-page {
+  font-family: "Arial", sans-serif;
+  color: var(--text-color);
+}
+
+.banner {
+  background: var(--bg-color);
+  color: white;
+  text-align: center;
+  padding: 12rem 1rem;
+  height: 100vh;
+}
+
+.banner-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.banner h1 {
+  font-size: 6rem;
+  -webkit-text-stroke: 2px var(--accent-color);
+  color: transparent;
+}
+
+.banner p {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.banner h3 {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  color: var(--secondary-color);
+}
+
+.banner .bouncing-arrow {
+  font-size: 2rem;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
   }
-  
-  /* Root Variables */
-  :root {
-    --bg-color: #1e3a8a;
-    --accent-color: #2563eb;
-    --text-color: #333;
-    --light-color: #f3f4f6;
-    --secondary-color: #e5e7eb;
+  40% {
+    transform: translateY(-20px);
   }
-  
-  /* Contact Page Styles */
-  .contact-page {
-    font-family: 'Arial', sans-serif;
-    color: var(--text-color);
+  60% {
+    transform: translateY(-10px);
   }
-  
-  /* Banner Section */
-  .banner {
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-      url('https://via.placeholder.com/1920x600') center/cover no-repeat;
-    text-align: center;
-    color: white;
-    padding: 5rem 1rem;
-  }
-  
-  .banner-content {
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  
+}
+
+/* Form  */
+.contact-container {
+  padding: 2rem 1rem;
+  max-width: 600px;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.contact-container p {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: var(--text-color);
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 1.5rem;
+  background-color: var(--light-color);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.contact-form label {
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.contact-form input,
+.contact-form textarea {
+  padding: 0.8rem;
+  font-size: 1rem;
+  border: 1px solid var(--secondary-color);
+  border-radius: 4px;
+  width: 100%;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 4px var(--accent-color);
+  outline: none;
+}
+
+.contact-form textarea {
+  resize: vertical;
+  height: 120px;
+}
+
+.contact-form button {
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.contact-form button:hover {
+  background-color: #1e40af;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
   .banner h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    font-size: 2.5rem;
   }
-  
+
   .banner p {
-    font-size: 1.25rem;
+    font-size: 1rem;
   }
-  
-  /* Contact Form Container */
+
   .contact-container {
-    padding: 2rem 1rem;
-    max-width: 600px;
-    margin: 2rem auto;
-    text-align: center;
+    padding: 1rem;
   }
-  
-  .contact-container p {
-    margin-bottom: 1rem;
-    font-size: 1rem;
-    color: var(--text-color);
-  }
-  
-  /* Contact Form Styles */
+
   .contact-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    background-color: var(--light-color);
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
   }
-  
-  .contact-form label {
-    font-weight: bold;
-    font-size: 0.9rem;
-  }
-  
-  .contact-form input,
-  .contact-form textarea {
-    padding: 0.8rem;
-    font-size: 1rem;
-    border: 1px solid var(--secondary-color);
-    border-radius: 4px;
-    width: 100%;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .contact-form input:focus,
-  .contact-form textarea:focus {
-    border-color: var(--accent-color);
-    box-shadow: 0 0 4px var(--accent-color);
-    outline: none;
-  }
-  
-  .contact-form textarea {
-    resize: vertical;
-    height: 120px;
-  }
-  
-  .contact-form button {
-    padding: 0.8rem 1rem;
-    font-size: 1rem;
-    background-color: var(--accent-color);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .contact-form button:hover {
-    background-color: #1e40af;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .banner h1 {
-      font-size: 2.5rem;
-    }
-  
-    .banner p {
-      font-size: 1rem;
-    }
-  
-    .contact-container {
-      padding: 1rem;
-    }
-  
-    .contact-form {
-      padding: 1.5rem;
-    }
-  }
-  </style>
-  
+}
+</style>
