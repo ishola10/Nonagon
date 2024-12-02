@@ -1,4 +1,4 @@
-import { useGenAi } from './useGenAi.js'
+import { useGenAi } from './useGenAi.ts'
 
 export const useGetGenerativeModelGP = async (prompt, language) => {
   const model = await useGenAi('gemini-pro')
