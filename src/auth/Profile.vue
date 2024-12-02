@@ -151,7 +151,7 @@ const uploadProfilePicture = async (event) => {
 }
 
 .profile-picture {
-  width: 100px;
+  width: 150px;
   height: 150px;
   /* border-radius: 50%; */
   overflow: hidden;
@@ -164,9 +164,7 @@ const uploadProfilePicture = async (event) => {
   height: 100%;
   object-fit: cover;
   border: 2px solid black;
-  padding: 25px;
-  border-radius: 100%;
-  margin-bottom: 20px;
+  border-radius: 50%;
 }
 
 .default-picture {
