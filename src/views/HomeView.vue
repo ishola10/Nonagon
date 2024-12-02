@@ -3,10 +3,9 @@
     <section class="hero">
       <div class="hero-content">
         <div class="hero-content-text">
-          <h2>Explore the Wonders of Physics</h2>
+          <h2>Explore the Wonders of Physics </h2>
           <p>
-            Helping Nigerian students understand physics concepts through
-            interactive simulations and hands-on experimentation.
+            The first Nigerian physics simulation platform designed to help students understand physics concepts through interactive simulations and hands-on experimentation.
           </p>
           <a href="/signup" class="cta-button">Get Started</a>
         </div>

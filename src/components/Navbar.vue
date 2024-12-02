@@ -42,6 +42,7 @@
         </div>
       </div>
       <router-link to="/contact" active-class="active">Contact</router-link>
+      <router-link to="/feedback" active-class="active">Feedback</router-link>
       <a style="cursor: pointer;" @click="navigateToChatbot" active-class="active">Chatbot</a>
     </div>
     <div class="links">

@@ -6,7 +6,7 @@
         <p>Learn everything about <strong>Nonagon.</strong></p>
         <h3>
           Nonagon is an online platform that provides interactive physics
-          simulation for students of all ages. Our mission is to make learning
+          simulation for Nigerian students of all ages. Our mission is to make learning
           physics fun and engaging by offering a variety of resources, including
           simulations, practice problems, and real-world examples.
         </h3>
@@ -20,7 +20,7 @@
         <h2>About Us</h2>
         <p>
           Nonagon is an online platform that provides interactive physics
-          simulation for students of all ages. Our mission is to make learning
+          simulation for Nigerian students of all ages. Our mission is to make learning
           physics fun and engaging by offering a variety of resources, including
           simulations, practice problems, and real-world examples. Whether you
           are a high school student preparing for an exam or a lifelong learner

@@ -1,6 +1,7 @@
 <template>
   <div class="chat-app">
     <aside class="sidebar">
+      <button @click="goBack">< Back</button>
       <button class="new-chat-btn" @click="createNewTab">+ New Chat</button>
       <div class="chat-tabs">
         <div
@@ -65,6 +66,11 @@
 <script setup>
 import { ref, watch, onMounted } from "vue";
 import { useGetGenerativeModelGP } from "./useGetGenerativeModelGP.js";
+import router from "@/router/index.ts";
+
+const goBack = () => {
+  router.go(-1);
+};
 
 const question = ref("");
 const isLoading = ref(false);

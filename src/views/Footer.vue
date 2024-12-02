@@ -5,6 +5,7 @@
                 <div class="footer-links">
                     <a href="/about">About</a>
                     <a href="/contact">Contact</a>
+                    <a href="/feedback">Feedback</a>
                     <a href="#">Privacy Policy</a>
                     <a href="#">Terms of Service</a>
                 </div>

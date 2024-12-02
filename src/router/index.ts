@@ -74,6 +74,11 @@ const router = createRouter({
       name: "topic-content",
       component: () => import("../views/TopicContent.vue"),
       props: true
+    },
+    {
+      path: "/feedback",
+      name: "feedback",
+      component: () => import("../views/Feedback.vue"),
     }
   ],
 });
