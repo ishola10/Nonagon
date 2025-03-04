@@ -1,218 +1,89 @@
 <template>
-  <div class="profile">
-    <h2>Profile</h2>
-    <div v-if="user">
-      <div class="user-info">
-        <div class="profile-picture">
-          <img
-            :src="user.photoURL || '../assets/default-profile-picture.png'"
-            :alt="user.displayName"
-          />
-          <input type="file" accept="image/*" @change="uploadProfilePicture" />
-        </div>
-        <div class="user-details">
-          <div v-if="editing">
-            <label for="newName">New Name:</label>
-            <input v-model="newName" type="text" required />
-            <label for="dob">Date of Birth:</label>
-            <input v-model="dob" type="date" required />
-            <label for="address">Address:</label>
-            <input v-model="address" type="text" required />
-            <label for="phone">Phone Number:</label>
-            <input v-model="phone" type="tel" required />
-            <button @click="saveProfile">Save</button>
-            <button @click="cancelEdit">Cancel</button>
-          </div>
-          <div v-else>
-            <p><strong>Name:</strong> {{ user.displayName }}</p>
-            <p><strong>Date of Birth:</strong> {{ user.dob }}</p>
-            <p><strong>Address:</strong> {{ user.address }}</p>
-            <p><strong>Phone Number:</strong> {{ user.phone }}</p>
-            <button @click="startEdit">Edit Profile</button>
-          </div>
-          <button @click="signout">Sign out</button>
-        </div>
-      </div>
+  <div class="dashboard">
+    <aside class="sidebar">
+      <nav>
+        <div>
+      <router-link to="/"><h1>Nonagon.</h1></router-link>
     </div>
-    <div v-else>
-      <p>User not logged in</p>
-      <router-link to="/login">Login</router-link>
-    </div>
+        <ul>
+          <li><router-link to="/dashboard">Dashboard</router-link></li>
+          <li><router-link to="/settings">Settings</router-link></li>
+          <li><router-link to="/classes">Classes</router-link></li>
+          <li><router-link to="/referrals">Referrals</router-link></li>
+        </ul>
+      </nav>
+    </aside>
+    <main class="content">
+      <router-view />
+    </main>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { auth, storage } from "../firebase";
-import {
-  getDownloadURL,
-  ref as storageRef,
-  uploadBytes,
-} from "firebase/storage";
-import { updateProfile } from "firebase/auth";
+import { onMounted, ref } from "vue";
+import { auth } from "../firebase";
 import router from "@/router/index";
 
 const user = ref(null);
-const editing = ref(false);
-const newName = ref("");
-const dob = ref("");
-const address = ref("");
-const phone = ref("");
 
 onMounted(() => {
-  const unsubscribe = auth.onAuthStateChanged((newUser) => {
+  auth.onAuthStateChanged((newUser) => {
     user.value = newUser;
-    if (newUser) {
-      newName.value = newUser.displayName || "";
-      dob.value = newUser.dob || "";
-      address.value = newUser.address || "";
-      phone.value = newUser.phone || "";
-    }
   });
-
-  return () => {
-    unsubscribe();
-  };
 });
-
-const signout = async () => {
-  try {
-    await auth.signOut();
-    console.log("User signed out");
-    router.push("/login");
-  } catch (error) {
-    console.error("Error signing out:", error.message);
-  }
-};
-
-const startEdit = () => {
-  editing.value = true;
-};
-
-const cancelEdit = () => {
-  editing.value = false;
-};
-
-const saveProfile = async () => {
-  try {
-    await updateProfile(auth.currentUser, {
-      displayName: newName.value,
-      dob: dob.value,
-      address: address.value,
-      phone: phone.value,
-    });
-    user.value.displayName = newName.value;
-    user.value.dob = dob.value;
-    user.value.address = address.value;
-    user.value.phone = phone.value;
-    editing.value = false;
-  } catch (error) {
-    console.error("Error saving profile:", error.message);
-  }
-};
-
-const uploadProfilePicture = async (event) => {
-  const file = event.target.files[0];
-  const storageReference = storageRef(
-    storage,
-    `profilePictures/${auth.currentUser.uid}/${file.name}`
-  );
-
-  try {
-    const snapshot = await uploadBytes(storageReference, file);
-    const downloadURL = await getDownloadURL(snapshot.ref);
-    user.value.photoURL = downloadURL;
-
-    await updateProfile(auth.currentUser, {
-      photoURL: downloadURL,
-    });
-
-    console.log("Profile picture uploaded successfully.");
-  } catch (error) {
-    console.error("Error uploading profile picture:", error.message);
-  }
-};
 </script>
 
 <style>
-.profile {
-  max-width: 300px;
-  margin: 0 auto;
-  margin-top: 10%;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.user-info {
+.dashboard {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  height: 100vh;
 }
 
-.profile-picture {
-  width: 150px;
-  height: 150px;
-  /* border-radius: 50%; */
-  overflow: hidden;
-  position: relative;
-  margin-bottom: 20px;
-}
-
-.profile-picture img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border: 2px solid black;
-  border-radius: 50%;
-}
-
-.default-picture {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.user-details {
-  width: 100%;
-}
-
-.user-details input {
-  width: calc(100% - 20px);
-  margin-bottom: 10px;
-}
-
-.user-details button {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  background-color: blue;
+.sidebar {
+  width: 250px;
+  background-color: #2c3e50;
   color: white;
-  cursor: pointer;
-  margin-top: 10px;
+  padding: 20px;
+  padding-top: 8%;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
-.user-details button:hover {
-  background-color: darkblue;
+nav h1 {
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin: 0;
 }
 
-.user-details button:disabled {
-  background-color: lightgray;
-  cursor: not-allowed;
+.sidebar nav ul {
+  list-style: none;
+  padding: 0;
 }
 
-.user-details p {
-  margin-bottom: 10px;
+.sidebar nav ul li {
+  margin-bottom: 15px;
 }
 
-.user-details strong {
-  font-weight: bold;
+.sidebar nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  display: block;
+  padding: 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
 }
 
-.user-details button + button {
-  margin-left: 0;
+.sidebar nav ul li a:hover {
+  background-color: #34495e;
+}
+
+.content {
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+h2 {
+  margin-top: 0;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="topic-content">
       <h1>{{ title }}</h1>
       <p v-if="content" v-html="content"></p>
       <p v-else>Loading...</p>
@@ -28,6 +28,8 @@
   </script>
   
   <style scoped>
-
+.topic-content{
+  margin-top: 10%;
+}
   </style>
   
